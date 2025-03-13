@@ -95,4 +95,3 @@ MIT License
 Priyanshu Tiwari (contributor)
 
 Original Jaya package by Neeraj Bokde
-
