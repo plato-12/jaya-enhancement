@@ -1,4 +1,3 @@
-```markdown
 # Jaya Package Enhancement: Constraint Visualization
 
 This repository contains an enhancement to the [Jaya](https://CRAN.R-project.org/package=Jaya) R package, adding new functionality for visualizing constraints in multi-objective optimization problems.
@@ -96,4 +95,4 @@ MIT License
 Priyanshu Tiwari (contributor)
 
 Original Jaya package by Neeraj Bokde
-```
+
