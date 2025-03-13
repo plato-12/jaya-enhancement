@@ -1,0 +1,182 @@
+# Jaya: Gradient-Free Optimization Algorithm for R
+
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/Jaya)](https://CRAN.R-project.org/package=Jaya)
+[![R-CMD-check](https://github.com/neerajdhanraj/Jaya/workflows/R-CMD-check/badge.svg)](https://github.com/neerajdhanraj/Jaya/actions)
+[![Codecov test coverage](https://codecov.io/gh/neerajdhanraj/Jaya/branch/main/graph/badge.svg)](https://app.codecov.io/gh/neerajdhanraj/Jaya?branch=main)
+<!-- badges: end -->
+
+## Overview
+
+The Jaya package provides an implementation of the Jaya algorithm, a gradient-free optimization method introduced by R.V. Rao (2016). This population-based algorithm can solve both single-objective and multi-objective optimization problems without requiring algorithm-specific control parameters. The algorithm works by moving toward the best solution and away from the worst solution, making it simple yet effective for a wide range of optimization problems.
+
+## Key Features
+
+- **Parameter-free optimization**: No algorithm-specific parameters to tune
+- **Single-objective optimization**: Minimize or maximize a single objective function
+- **Multi-objective optimization**: Find Pareto-optimal solutions balancing multiple objectives
+- **Constraint handling**: Support for inequality constraints
+- **Constraint visualization**: Visualize how constraints affect the Pareto front
+- **Adaptive population adjustment**: Dynamically resize the population for improved convergence
+- **Early stopping**: Terminate optimization when improvement stagnates
+- **Parallel processing**: Speed up computation on multi-core systems
+
+## Installation
+
+You can install the released version of Jaya from [CRAN](https://CRAN.R-project.org) with:
+
+```r
+install.packages("Jaya")
+```
+
+Or install the development version from GitHub:
+
+```r
+# install.packages("devtools")
+devtools::install_github("neerajdhanraj/Jaya")
+```
+
+## Usage
+
+### Single-Objective Optimization
+
+```r
+library(Jaya)
+
+# Define a simple objective function (Sphere function)
+sphere_function <- function(x) sum(x^2)
+
+# Run the Jaya optimization algorithm
+result <- jaya(
+  fun = sphere_function,
+  lower = rep(-5, 3),  # Lower bounds for 3 variables
+  upper = rep(5, 3),   # Upper bounds for 3 variables
+  popSize = 30,        # Population size
+  maxiter = 100,       # Maximum iterations
+  n_var = 3,           # Number of variables
+  opt = "minimize"     # Minimize the function
+)
+
+# Display the results
+summary(result)
+
+# Plot the convergence
+plot(result)
+```
+
+### Multi-Objective Optimization
+
+```r
+# Define multiple objectives
+objective1 <- function(x) sum(x^2)
+objective2 <- function(x) sum((x - 2)^2)
+
+# Define constraints (must return <= 0 for feasibility)
+constraint1 <- function(x) sum(x) - 3  # Sum of variables must be <= 3
+constraint2 <- function(x) -sum(x) + 1 # Sum of variables must be >= 1
+
+# Run the enhanced multi-objective optimization with constraint tracking
+result_multi <- jaya_multi_enhanced(
+  objectives = list(objective1, objective2),
+  lower = c(-5, -5),
+  upper = c(5, 5),
+  popSize = 50,
+  maxiter = 100,
+  n_var = 2,
+  constraints = list(constraint1, constraint2)
+)
+
+# Visualize constraints and Pareto front
+plot_jaya_constraints(result_multi)
+
+# Plot pairwise objectives
+plot_jaya_multi_pairwise(result_multi)
+```
+
+## Additional Features
+
+### Early Stopping
+
+For problems that converge quickly:
+
+```r
+result <- jaya(
+  fun = sphere_function,
+  lower = rep(-5, 3),
+  upper = rep(5, 3),
+  popSize = 30,
+  maxiter = 100,
+  n_var = 3,
+  early_stopping = TRUE,  # Enable early stopping
+  tolerance = 1e-6,       # Convergence tolerance
+  patience = 10           # Number of iterations without improvement
+)
+```
+
+### Adaptive Population Sizing
+
+Dynamically adjust the population size:
+
+```r
+result <- jaya(
+  fun = sphere_function,
+  lower = rep(-5, 3),
+  upper = rep(5, 3),
+  popSize = 50,
+  maxiter = 100,
+  n_var = 3,
+  adaptive_pop = TRUE,  # Enable adaptive population
+  min_popSize = 20,     # Minimum population size
+  max_popSize = 100     # Maximum population size
+)
+```
+
+## Constraint Visualization
+
+Understand how constraints affect the Pareto front in multi-objective optimization:
+
+```r
+# Visualize all constraints
+plot_jaya_constraints(result_multi)
+
+# Focus on a specific constraint
+plot_jaya_constraints(result_multi, constraints_to_show = 1)
+
+# Create an interactive visualization
+plot_jaya_constraints(result_multi, interactive = TRUE)
+```
+
+## Getting Help
+
+For more detailed information, refer to the package documentation:
+
+```r
+?jaya
+?jaya_multi
+?jaya_multi_enhanced
+?plot_jaya_constraints
+```
+
+See the vignettes for examples and usage guidance:
+
+```r
+browseVignettes("Jaya")
+```
+
+## Citation
+
+If you use this package in your research, please cite:
+
+```
+Rao, R. V. (2016). Jaya: A simple and new optimization algorithm for solving constrained and unconstrained optimization problems. International Journal of Industrial Engineering Computations, 7(1), 19-34.
+```
+
+And the R package:
+
+```
+Bokde, N. (2024). Jaya: Gradient-Free Optimization Algorithm for Single and Multi-Objective Problems. R package version 1.1.0. https://CRAN.R-project.org/package=Jaya
+```
+
+## License
+
+This package is licensed under the MIT License.
